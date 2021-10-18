@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Route, NavLink, Switch } from "react-router-dom";
 import DetailsOfPokemon from "./components/DetailsOfPokemon";
 import List from "./components/List";
-import Search from "./components/Search";
+import './App.css'
 
 export default function App() {
   return (
     <Router>
-      <NavLink to='/'>pokemon</NavLink>
+      <NavLink to='/' className='main-nav'>Pokemon</NavLink>
       <Switch>
         <Route exact path='/'>
           <List />

@@ -1,27 +1,28 @@
 import { useHistory, useLocation } from "react-router-dom";
 import qs from "query-string";
+import { useEffect } from "react";
+import './styles/index.css';
 
 
 export default function Sort({ sortValue, setSortValue }) {
-    const { pathname, search } = useLocation();
+    const { pathname } = useLocation();
     const history = useHistory();
 
-    const sortList = (e) => {
-        setSortValue(e.target.value)
+
+    useEffect(() => {
         history.replace({
             pathname: pathname,
             search: qs.stringify({
-                ...qs.parse(search),
                 sort: sortValue
             })
         });
-    };
+    }, [sortValue])
 
 
     return (
         <div>
-            <select onChange={sortList} placeholder={sortValue}>
-                <option value='select'>select</option>
+            <select className='sort-select' onChange={(e) => setSortValue(e.target.value)} placeholder={sortValue}>
+                <option value='select'>sort by</option>
                 <option value='name'>Name</option>
                 <option value='height'>Height</option>
                 <option value='weight'>Weight</option>

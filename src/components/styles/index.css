@@ -1,0 +1,75 @@
+.main-div{
+    margin: 3rem 2rem 1rem 3rem;
+}
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-evenly;
+}
+
+.card{
+    flex: 0 1 24%;
+    margin: 1rem .25rem;
+    padding: .5rem;
+    border-radius: 10px;
+    border: 1px solid black;
+    text-align: center;
+    cursor: none;
+}
+.cards :hover{
+    box-shadow: 5px 10px #888888;
+}
+.card :hover{
+    box-shadow: none;
+}
+.card-content{
+    text-decoration: none;
+    color: black;
+}
+.list-items{
+    list-style: none;
+    border: 1px solid black;
+    display: contents;
+    line-height: 25px;
+}
+.card-sort-option{
+    display: inline-flex;
+    padding: 1.5rem;
+}
+.select-cards-option{
+    display: inline-flex;
+    border:1px solid black;
+    border-radius: 5px;
+    margin-right: 3.5rem;
+    height: 1.5srem; 
+    width:9rem;   
+}
+.option-label{
+    padding: 6px 4px;
+    font-size: small;
+}
+.card-select{
+    border: none;
+}
+.sort-select{
+    margin-right: 1rem;
+    padding: 6px 2px;
+    border-radius: 5px;
+}
+
+.next-previous-btn{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-evenly;
+}
+.btn-btn{
+    margin-top:20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 30px;
+    width: max-content;
+}

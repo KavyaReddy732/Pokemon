@@ -1,7 +1,9 @@
 import { useHistory, useLocation, NavLink } from "react-router-dom";
-import qs from "query-string";
+import axios from "axios";
 import useQuery from "../hooks/useQuery";
+import qs from "query-string";
 import { useState } from "react";
+import './styles/search.css';
 
 export default function Search() {
     const { pathname, search } = useLocation();
@@ -11,50 +13,78 @@ export default function Search() {
     const [searchInput, setSearchInput] = useState('')
     const [searchResult, setSearchResult] = useState([]);
     const [nameSearchResult, setNameSearchResult] = useState();
-    console.log(searchResult)
 
     const onAbilitySearch = async () => {
-        const result = await fetch(
+        const results = await axios.get(
             `https://pokeapi.co/api/v2/ability/${searchInput}`
         );
-        const response = await result.json();
+        const response = await results.data;
         history.replace({
             pathname: pathname,
             search: qs.stringify({
-                abilitysearch: searchInput
+                search: searchInput
             })
         });
         setSearchResult(response.pokemon)
     };
 
     const onNameSearch = async () => {
-        const result = await fetch(
+        const result = await axios.get(
             `https://pokeapi.co/api/v2/pokemon/${searchInput}`
         );
-        const response = await result.json();
-        console.log(response)
         history.replace({
             pathname: pathname,
             search: qs.stringify({
-                namesearch: searchInput
+                search: searchInput
             })
         });
-        // setNameSearchResult(response.pokemon)
+        setNameSearchResult(result.data)
     };
+
+    const redirectToMain = () => {
+        query.delete(search)
+        history.replace({
+            pathname: pathname
+        });
+    }
 
     return (
         <div>
-            <select onChange={(e) => setSearchType(e.target.value)}>
-                <option value='ability'>Ability</option>
-                <option value='name'>name</option>
-            </select>
-            <input type='text' placeholder="search for pokemon" onChange={(e) => setSearchInput(e.target.value)} />
-            <button type='submit' onClick={searchType === 'ability' ? onAbilitySearch : onNameSearch}>search</button>
-            {searchResult.map(({ pokemon }) => (<div key={pokemon.name}>
-                <NavLink to={'/' + pokemon.name}>
-                    <p>{pokemon.name}</p>
-                </NavLink>
-            </div>))}
+            <div className='search-box'>
+                <select className='search-select' onChange={(e) => setSearchType(e.target.value)}>
+                    <option value='select'>select</option>
+                    <option value='ability'>Ability</option>
+                    <option value='name'>name</option>
+                </select>
+                <input type='text' className='search-input' placeholder="search for pokemon" onChange={(e) => setSearchInput(e.target.value)} />
+                <button type='submit' className='search-btn' onClick={searchType === 'ability' ? onAbilitySearch : onNameSearch}>search</button>
+            </div>
+            {searchType === 'ability' && query.get("search") ? (
+                <div>
+                    <div className='search-list'>
+                        {searchResult.map(({ pokemon }) => (
+                            <div key={pokemon.name}>
+                                <NavLink to={'/pokemon/' + pokemon.name} className='individual-links' >
+                                    <p>{pokemon.name}</p>
+                                </NavLink>
+                            </div>))}
+                    </div>
+                    < div >
+                        <button className='search-back-btn' type='button' onClick={redirectToMain}>back</button>
+                    </div>
+                </div>
+            ) : query.get("search") && nameSearchResult && <div>
+                <div className='search-name-list'>
+                    <NavLink to={'/pokemon/' + nameSearchResult.name} className='individual-links'>
+                        <img src={nameSearchResult.sprites.front_default} />
+                        <p>{nameSearchResult.name}</p>
+                    </NavLink>
+                </div>
+                < div >
+                    <button className='search-back-btn' type='button' onClick={redirectToMain}>back</button>
+                </div>
+            </div>
+            }
         </div>
     );
 }

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useHistory, useLocation, NavLink } from "react-router-dom";
 import useQuery from "../hooks/useQuery";
 import qs from "query-string";
-import '../App.css';
+import './styles/index.css';
 import Sort from "./Sort";
 import Search from "./Search";
 
@@ -24,7 +24,7 @@ export default function List() {
             } = await axios.get(
                 `https://pokeapi.co/api/v2/pokemon?limit=${limit || 10
                 }&offset=${page * limit || 0}`
-            );
+                );
 
             const pokemonData = await Promise.all(
                 results.map(({ url }) => axios.get(url))
@@ -56,7 +56,6 @@ export default function List() {
                 ...qs.parse(search),
                 limit: cardsPerPage,
                 page: `${Number(query.get("page")) + 1}`,
-                sort: query.get("sort")
             })
         });
     };
@@ -68,7 +67,6 @@ export default function List() {
                 ...qs.parse(search),
                 limit: cardsPerPage,
                 page: `${Number(query.get("page")) - 1}`,
-                sort: query.get("sort")
             })
         });
     };
@@ -78,28 +76,44 @@ export default function List() {
     }
 
     return (
-        <div>
+        <>
             <Search />
-            <label>number of cards</label>
-            <select value={cardsPerPage} onChange={cardsToRender}   >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-            </select>
-            <Sort sortValue={sortValue} setSortValue={setSortValue} />
-
-            {pokemonList &&
-                pokemonList.map(({ id, name, height }) => (
-                    <div className='App' key={id}>
-                        <NavLink to={'/pokemon/' + id}>
-                            <p>{name}</p>
-                            <p>{height}</p>
-                        </NavLink>
-                    </div>
-                ))}
-
-            <button onClick={handlePreviousPage}>prev</button>
-            <button onClick={handleNextPage}>next</button>
-        </div>
+            <div className='main-div'>
+                {query.get("search") ? null :
+                    <div>
+                        <div className='card-sort-option'>
+                            <div className='select-cards-option'>
+                                <label className='option-label'>cards to display</label>
+                                <select className='card-select' value={cardsPerPage} onChange={cardsToRender}>
+                                    <option value={10}>10</option>
+                                    <option value={20}>20</option>
+                                    <option value={50}>50</option>
+                                </select>
+                            </div>
+                            <Sort sortValue={sortValue} setSortValue={setSortValue} />
+                        </div>
+                        <div className='cards'>
+                            {pokemonList &&
+                                pokemonList.map(({ name, height, weight, sprites, abilities }) => (
+                                    <div key={name} className='card'>
+                                        <NavLink to={'/pokemon/' + name} className='card-content'>
+                                            <img src={sprites.front_default} alt='pokemon' />
+                                            <h4>{name}</h4>
+                                            <p>height: {height}</p>
+                                            <p>weight: {weight}</p>
+                                            <ul className='list-items'>abilities: {abilities.map((element, i) =>
+                                                <li key={i}>{element.ability.name}</li>
+                                            )}</ul>
+                                        </NavLink>
+                                    </div>
+                                ))}
+                        </div>
+                        <div className='next-previous-btn'>
+                            <button className='btn-btn' onClick={handlePreviousPage}>previous</button>
+                            <button className='btn-btn' onClick={handleNextPage}>next</button>
+                        </div>
+                    </div>}
+            </div>
+        </>
     );
 }
