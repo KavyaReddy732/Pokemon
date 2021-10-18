@@ -1,0 +1,10 @@
+
+
+.main-nav{
+    display: block;
+    text-decoration: none;
+    color: rgb(172, 142, 10);
+    font-family: emoji;
+    font-size: 40px;
+    margin: 1rem 2rem;
+}
