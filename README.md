@@ -1,5 +1,3 @@
-# Getting Started by Cloning the project
-- git clone https://github.com/KavyaReddy732/TestAssignment.git
 ## `yarn install`
 -install the node modules
 
